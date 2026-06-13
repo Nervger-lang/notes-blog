@@ -38,34 +38,15 @@ jobs:
         env:
           PASS: ${{ secrets.BLOG_PASSWORD }}
         run: |
-          npx staticrypt site/index.html "$PASS" \
-            -o encrypted/index.html \
-            -t "🔒 私人笔记" \
-            -i "输入密码查看" \
-            --remember 30 \
-            --label-password "密码"
-          
-          for f in site/**/*.html; do
-            [ "$f" = "site/index.html" ] && continue
-            rel="${f#site/}"
-            dir="encrypted/$(dirname "$rel")"
-            mkdir -p "$dir"
-            npx staticrypt "$f" "$PASS" \
-              -o "encrypted/$rel" \
-              -t "🔒 私人笔记" \
-              -i "输入密码查看" \
-              --remember 30 \
-              --label-password "密码"
+          cp -r site encrypted
+          find encrypted -name "*.html" | while read f; do
+            npx staticrypt "$f" -p "$PASS" -d "$(dirname "$f")" \
+              --short \
+              --template-title "🔒 Private Notes" \
+              --template-instructions "Enter password to continue" \
+              --template-button "Unlock"
           done
-          
-          # Copy all non-HTML assets
-          find site -type f ! -name "*.html" | while read f; do
-            rel="${f#site/}"
-            mkdir -p "encrypted/$(dirname "$rel")"
-            cp "$f" "encrypted/$rel"
-          done
-          
-          echo "=== Encrypted files ==="
+          echo "=== Files ==="
           find encrypted -type f | sort
 
       - uses: actions/upload-pages-artifact@v3
