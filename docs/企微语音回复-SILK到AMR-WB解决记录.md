@@ -1,7 +1,7 @@
 # Hermes 企微语音回复 — 完整解决记录
 
 > 时间：2026.6.10 ~ 2026.6.12  
-> 目标：让 Hermes 大管家通过企微给我发原生语音消息（可爱女声，正常播放 + 正确时长）
+> 目标：让 Hermes 大管家通过企微给王哥哥发原生语音消息（可爱女声，正常播放 + 正确时长）
 
 ---
 
@@ -9,12 +9,12 @@
 
 ### 脚本位置
 ```
-~/.hermes/scripts/tts_amrwb.py
+/home/kirito/.hermes/scripts/tts_amrwb.py
 ```
 
 ### 用法
 ```bash
-python3 ~/.hermes/scripts/tts_amrwb.py "你想说的话" /tmp/voice.amr
+python3 /home/kirito/.hermes/scripts/tts_amrwb.py "你想说的话" /tmp/voice.amr
 # 输出：✅ /tmp/voice.amr: 18065B (17.6KB), 6.1s
 ```
 
@@ -27,9 +27,9 @@ python3 ~/.hermes/scripts/tts_amrwb.py "你想说的话" /tmp/voice.amr
 
 ### 完整流程
 ```
-我说"语音回复" 
+王哥哥说"语音回复" 
     → Hermes 生成文字回复
-    → python3 ~/.hermes/scripts/tts_amrwb.py "回复内容" /tmp/voice.amr
+    → python3 /home/kirito/.hermes/scripts/tts_amrwb.py "回复内容" /tmp/voice.amr
     → 响应中写 MEDIA:/tmp/voice.amr
     → 企微收到原生语音气泡 ✅
 ```
@@ -113,9 +113,9 @@ ffmpeg -i voice.mp3 -ar 16000 -ac 1 -c:a libvo_amrwbenc -b:a 23.85k voice.amr
 
 | 文件 | 说明 |
 |------|------|
-| `~/.hermes/scripts/tts_amrwb.py` | 🏆 当前方案：Edge TTS → AMR-WB 一键脚本 |
-| `~/.hermes/scripts/tts_silk.py` | 旧方案（历史参考）：SILK V3 编码 |
-| `~/.hermes/skills/communication/wecom-voice-reply/SKILL.md` | 技能文档 v4.0 |
+| `/home/kirito/.hermes/scripts/tts_amrwb.py` | 🏆 当前方案：Edge TTS → AMR-WB 一键脚本 |
+| `/home/kirito/.hermes/scripts/tts_silk.py` | 旧方案（历史参考）：SILK V3 编码 |
+| `/home/kirito/.hermes/skills/communication/wecom-voice-reply/SKILL.md` | 技能文档 v4.0 |
 | `/tmp/silk-v3-decoder/` | SILK V3 编码器（已编译，备用） |
 
 ---
@@ -124,7 +124,7 @@ ffmpeg -i voice.mp3 -ar 16000 -ac 1 -c:a libvo_amrwbenc -b:a 23.85k voice.amr
 
 ```bash
 # 生成语音
-python3 ~/.hermes/scripts/tts_amrwb.py "要说的话" /tmp/voice.amr
+python3 /home/kirito/.hermes/scripts/tts_amrwb.py "要说的话" /tmp/voice.amr
 
 # 在 Hermes 响应中发送
 MEDIA:/tmp/voice.amr

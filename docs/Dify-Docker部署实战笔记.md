@@ -1,6 +1,6 @@
 # Dify Docker 部署实战笔记
 
-> 日期：2026-06-10 | 环境：Ubuntu 24.04, Docker 29.1.3 | 用户：<用户名>
+> 日期：2026-06-10 | 环境：Ubuntu 24.04, Docker 29.1.3 | 用户：kirito
 
 ---
 
@@ -64,8 +64,8 @@ git clone https://ghproxy.com/https://github.com/langgenius/dify.git
 ### 5. sudo 密码管道注意点
 
 ```bash
-echo "<用户名>" | sudo -S command  # 方式有时会认证失败
-echo '<用户名>' | sudo -S command  # 注意单双引号，大括号内变量
+echo "kirito" | sudo -S command  # 方式有时会认证失败
+echo 'kirito' | sudo -S command  # 注意单双引号，大括号内变量
 ```
 
 ---
@@ -76,7 +76,7 @@ echo '<用户名>' | sudo -S command  # 注意单双引号，大括号内变量
 
 ```bash
 # 写入国内可用的镜像源
-echo '<用户名>' | sudo -S tee /etc/docker/daemon.json > /dev/null << 'EOF'
+echo 'kirito' | sudo -S tee /etc/docker/daemon.json > /dev/null << 'EOF'
 {
   "registry-mirrors": [
     "https://docker.m.daocloud.io",
@@ -88,8 +88,8 @@ echo '<用户名>' | sudo -S tee /etc/docker/daemon.json > /dev/null << 'EOF'
 EOF
 
 # 重启 Docker
-echo '<用户名>' | sudo -S systemctl daemon-reload
-echo '<用户名>' | sudo -S systemctl restart docker
+echo 'kirito' | sudo -S systemctl daemon-reload
+echo 'kirito' | sudo -S systemctl restart docker
 ```
 
 > **经验**：DaoCloud 和 1Panel 的镜像源在 2026 年 6 月仍然可用，建议放前面。`hub.rat.dev` 仅作备用。
@@ -108,14 +108,14 @@ curl -sL --connect-timeout 30 \
 ### 第 3 步：解压到目标目录
 
 ```bash
-mkdir -p /home/<用户名>/dify
-tar -xzf /tmp/dify.tar.gz -C /home/<用户名>/dify --strip-components=1
+mkdir -p /home/kirito/dify
+tar -xzf /tmp/dify.tar.gz -C /home/kirito/dify --strip-components=1
 ```
 
 ### 第 4 步：配置环境变量
 
 ```bash
-cd /home/<用户名>/dify/docker
+cd /home/kirito/dify/docker
 
 # 复制配置模板
 cp .env.example .env
@@ -129,15 +129,15 @@ openssl rand -hex 32 | xargs -I{} sed -i "s|SECRET_KEY=.*|SECRET_KEY={}|" .env
 ### 第 5 步：验证镜像源可用
 
 ```bash
-echo "<用户名>" | sudo -S docker pull busybox:latest
+echo "kirito" | sudo -S docker pull busybox:latest
 # 能看到正常下载 → 镜像源配置成功
 ```
 
 ### 第 6 步：后台启动 Docker Compose
 
 ```bash
-cd /home/<用户名>/dify/docker
-echo "<用户名>" | sudo -S docker compose up -d
+cd /home/kirito/dify/docker
+echo "kirito" | sudo -S docker compose up -d
 ```
 
 **预计耗时**：
@@ -221,15 +221,15 @@ docker ps
 docker logs docker-api-1 --tail 50
 
 # 停止所有服务
-cd /home/<用户名>/dify/docker
-echo "<用户名>" | sudo -S docker compose down
+cd /home/kirito/dify/docker
+echo "kirito" | sudo -S docker compose down
 
 # 重启所有服务
-echo "<用户名>" | sudo -S docker compose up -d
+echo "kirito" | sudo -S docker compose up -d
 
 # 更新镜像并重启
-echo "<用户名>" | sudo -S docker compose pull
-echo "<用户名>" | sudo -S docker compose up -d --force-recreate
+echo "kirito" | sudo -S docker compose pull
+echo "kirito" | sudo -S docker compose up -d --force-recreate
 ```
 
 ---
@@ -237,6 +237,6 @@ echo "<用户名>" | sudo -S docker compose up -d --force-recreate
 ## 六、参考
 
 - Dify 官方仓库：https://github.com/langgenius/dify
-- Docker Compose 配置：`/home/<用户名>/dify/docker/docker-compose.yaml`
-- 环境配置：`/home/<用户名>/dify/docker/.env`
+- Docker Compose 配置：`/home/kirito/dify/docker/docker-compose.yaml`
+- 环境配置：`/home/kirito/dify/docker/.env`
 - Docker 镜像源配置：`/etc/docker/daemon.json`

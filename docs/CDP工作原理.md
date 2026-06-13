@@ -19,7 +19,7 @@
 **为什么放弃**：
 - 🐌 **慢**：每步都要截图→OCR→算坐标，三大模型都要参与
 - 🎯 **不准**：OCR 经常识别错字、漏字、把图标当文字
-- 📐 **依赖模板**：需要我给模板图片做 OpenCV 匹配
+- 📐 **依赖模板**：需要王哥哥给模板图片做 OpenCV 匹配
 - 😵 **复杂**：Wayland/X11 桌面环境差异，截图方式反复换（GNOME screenshot portal → import → scrot）
 
 ### 第二代：MCP（Chrome DevTools MCP）（已废弃）

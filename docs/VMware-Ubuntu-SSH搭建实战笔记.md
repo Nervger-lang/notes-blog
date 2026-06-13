@@ -1,6 +1,6 @@
 # VMware Ubuntu SSH 搭建实战笔记
 
-> 日期：2026-06-11 | 环境：Ubuntu 26.04 (Resolute Raccoon) @ VMware | 用户：<用户名>
+> 日期：2026-06-11 | 环境：Ubuntu 26.04 (Resolute Raccoon) @ VMware | 用户：kirito
 
 ---
 
@@ -99,10 +99,10 @@ sudo ssh-keygen -A
 ### 第 4 步：创建用户密钥对
 
 ```bash
-ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N "" -C "<用户名>@<用户名>-VMware"
-cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
-chmod 700 ~/.ssh
-chmod 600 ~/.ssh/authorized_keys
+ssh-keygen -t ed25519 -f /home/kirito/.ssh/id_ed25519 -N "" -C "kirito@kirito-VMware"
+cat /home/kirito/.ssh/id_ed25519.pub >> /home/kirito/.ssh/authorized_keys
+chmod 700 /home/kirito/.ssh
+chmod 600 /home/kirito/.ssh/authorized_keys
 ```
 
 ### 第 5 步：启动 SSH 并设为开机自启
@@ -130,17 +130,17 @@ sudo systemctl status ssh
 |------|------|
 | IP 地址 | `<服务器IP>` |
 | 端口 | `22` |
-| 用户名 | `<用户名>` |
+| 用户名 | `kirito` |
 | 认证方式 | 密钥（ed25519）+ 密码 |
 
 ### 方式一：密钥认证（推荐）
 
 ```bash
 # 从外部机器连接（需要先把私钥复制过去）
-ssh -i id_ed25519 <用户名>@<服务器IP>
+ssh -i id_ed25519 kirito@<服务器IP>
 ```
 
-私钥内容：`cat /home/<用户名>/.ssh/id_ed25519`
+私钥内容：`cat /home/kirito/.ssh/id_ed25519`
 
 主机指纹：
 ```

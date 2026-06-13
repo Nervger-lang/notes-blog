@@ -23,11 +23,11 @@ Ubuntu 26.04 的 xfdesktop 和 xfwm4 依赖 Wayland 的 `zwlr_layer_shell_v1` �
 ### xstartup 配置
 
 ```bash
-mkdir -p ~/.config/tigervnc
-echo "你的密码" | vncpasswd -f > ~/.config/tigervnc/passwd
-chmod 600 ~/.config/tigervnc/passwd
+mkdir -p /home/kirito/.config/tigervnc
+echo "你的密码" | vncpasswd -f > /home/kirito/.config/tigervnc/passwd
+chmod 600 /home/kirito/.config/tigervnc/passwd
 
-cat > ~/.config/tigervnc/xstartup << 'EOF'
+cat > /home/kirito/.config/tigervnc/xstartup << 'EOF'
 #!/bin/sh
 export XDG_SESSION_TYPE=x11
 export GDK_BACKEND=x11
@@ -39,10 +39,10 @@ xfsettingsd &
 xfce4-panel &
 exec openbox
 EOF
-chmod +x ~/.config/tigervnc/xstartup
+chmod +x /home/kirito/.config/tigervnc/xstartup
 ```
 
-> ⚠️ Ubuntu 26.04 的 TigerVNC 优先读 `~/.config/tigervnc/`，不是 `~/.vnc/`
+> ⚠️ Ubuntu 26.04 的 TigerVNC 优先读 `/home/kirito/.config/tigervnc/`，不是 `/home/kirito/.vnc/`
 
 ---
 

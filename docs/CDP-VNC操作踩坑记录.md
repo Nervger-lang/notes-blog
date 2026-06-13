@@ -3,7 +3,7 @@
 > **事件**：部署 MkDocs 私人博客到 GitHub  
 > **日期**：2026-06-14  
 > **环境**：Ubuntu 26.04 VM，Chrome 149，VNC :2，CDP :9222  
-> **用户账号**：Nervger-lang（GitHub），我企微私聊
+> **用户账号**：Nervger-lang（GitHub），王哥哥企微私聊
 
 ---
 
