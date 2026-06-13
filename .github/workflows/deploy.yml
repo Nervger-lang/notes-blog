@@ -1,0 +1,78 @@
+name: Deploy MkDocs + Staticrypt
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install MkDocs
+        run: pip install mkdocs mkdocs-material
+
+      - name: Build
+        run: mkdocs build
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Staticrypt
+        run: npm install -g staticrypt
+
+      - name: Encrypt with Staticrypt
+        run: |
+          mkdir -p encrypted
+          find site -name "*.html" | while read f; do
+            rel="${f#site/}"
+            dir="encrypted/$(dirname "$rel")"
+            mkdir -p "$dir"
+            staticrypt "$f" "${{ secrets.BLOG_PASSWORD }}" \
+              --output "encrypted/${rel%.html}.html" \
+              --title "🔒 私人笔记" \
+              --instructions "输入密码查看笔记" \
+              --remember 30 \
+              --label-password "密码"
+          done
+          # Copy static assets (css, js, images, fonts)
+          cp -r site/*/ encrypted/ 2>/dev/null || true
+          find site -type f ! -name "*.html" | while read f; do
+            rel="${f#site/}"
+            dir="encrypted/$(dirname "$rel")"
+            mkdir -p "$dir"
+            cp "$f" "encrypted/$rel"
+          done
+          # Copy index
+          cp encrypted/index.html encrypted/index.html.bak
+          ls -la encrypted/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: encrypted
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment
