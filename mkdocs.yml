@@ -1,0 +1,59 @@
+site_name: 王哥哥的笔记
+site_description: 私人技术笔记
+site_author: Wang
+
+theme:
+  name: material
+  language: zh
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: 切换暗色模式
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: 切换亮色模式
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - admonition
+  - footnotes
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+
+nav:
+  - 首页: index.md
+  - 技术笔记:
+    - CDP 工作原理: CDP工作原理.md
+    - VNC 虚拟桌面配置: VNC虚拟桌面配置指南.md
+    - Dify Docker 部署: Dify-Docker部署实战笔记.md
+    - VMware Ubuntu SSH: VMware-Ubuntu-SSH搭建实战笔记.md
+    - 企微语音回复: 企微语音回复-完整解决记录.md
+    - 企微语音 SILK→AMR: 企微语音回复-SILK到AMR-WB解决记录.md
+  - 开发:
+    - Java 转 AI 应用开发: Java转AI应用开发调研报告.md
+  - 市场分析:
+    - 主线稀缺性方法论: 主线稀缺性市场分析方法论.md
+  - 踩坑记录:
+    - 小红书自动化: 小红书自动化踩坑记录.md
