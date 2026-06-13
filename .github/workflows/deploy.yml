@@ -27,41 +27,46 @@ jobs:
       - name: Install MkDocs
         run: pip install mkdocs mkdocs-material
 
-      - name: Build
+      - name: Build MkDocs
         run: mkdocs build
 
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install Staticrypt
-        run: npm install -g staticrypt
-
       - name: Encrypt with Staticrypt
+        env:
+          PASS: ${{ secrets.BLOG_PASSWORD }}
         run: |
-          mkdir -p encrypted
-          find site -name "*.html" | while read f; do
+          npx staticrypt site/index.html "$PASS" \
+            -o encrypted/index.html \
+            -t "🔒 私人笔记" \
+            -i "输入密码查看" \
+            --remember 30 \
+            --label-password "密码"
+          
+          for f in site/**/*.html; do
+            [ "$f" = "site/index.html" ] && continue
             rel="${f#site/}"
             dir="encrypted/$(dirname "$rel")"
             mkdir -p "$dir"
-            staticrypt "$f" "${{ secrets.BLOG_PASSWORD }}" \
-              --output "encrypted/${rel%.html}.html" \
-              --title "🔒 私人笔记" \
-              --instructions "输入密码查看笔记" \
+            npx staticrypt "$f" "$PASS" \
+              -o "encrypted/$rel" \
+              -t "🔒 私人笔记" \
+              -i "输入密码查看" \
               --remember 30 \
               --label-password "密码"
           done
-          # Copy static assets (css, js, images, fonts)
-          cp -r site/*/ encrypted/ 2>/dev/null || true
+          
+          # Copy all non-HTML assets
           find site -type f ! -name "*.html" | while read f; do
             rel="${f#site/}"
-            dir="encrypted/$(dirname "$rel")"
-            mkdir -p "$dir"
+            mkdir -p "encrypted/$(dirname "$rel")"
             cp "$f" "encrypted/$rel"
           done
-          # Copy index
-          cp encrypted/index.html encrypted/index.html.bak
-          ls -la encrypted/
+          
+          echo "=== Encrypted files ==="
+          find encrypted -type f | sort
 
       - uses: actions/upload-pages-artifact@v3
         with:
