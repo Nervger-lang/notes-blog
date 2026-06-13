@@ -165,9 +165,9 @@ google-chrome-stable \
 
 ## 六、客户端连接
 
-- **地址**：`192.168.99.108:5902`
+- **地址**：`<服务器IP>:5902`
 - **密码**：你设的那个
-- **Mac**：`Cmd+K` → `vnc://192.168.99.108:5902`
+- **Mac**：`Cmd+K` → `vnc://<服务器IP>:5902`
 - **Windows/Linux**：任意 VNC Viewer（TigerVNC、RealVNC、TightVNC 都免费）
 
 ---

@@ -1,7 +1,7 @@
 # Hermes 企微语音回复 — 完整解决记录
 
 > 时间：2026.6.10 ~ 2026.6.12  
-> 目标：让 Hermes 大管家通过企微给王哥哥发原生语音消息（可爱女声，正常播放 + 正确时长）
+> 目标：让 Hermes 大管家通过企微给我发原生语音消息（可爱女声，正常播放 + 正确时长）
 
 ---
 
@@ -27,7 +27,7 @@ python3 ~/.hermes/scripts/tts_amrwb.py "你想说的话" /tmp/voice.amr
 
 ### 完整流程
 ```
-王哥哥说"语音回复" 
+我说"语音回复" 
     → Hermes 生成文字回复
     → python3 ~/.hermes/scripts/tts_amrwb.py "回复内容" /tmp/voice.amr
     → 响应中写 MEDIA:/tmp/voice.amr

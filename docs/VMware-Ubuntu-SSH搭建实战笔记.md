@@ -1,6 +1,6 @@
 # VMware Ubuntu SSH 搭建实战笔记
 
-> 日期：2026-06-11 | 环境：Ubuntu 26.04 (Resolute Raccoon) @ VMware | 用户：kirito
+> 日期：2026-06-11 | 环境：Ubuntu 26.04 (Resolute Raccoon) @ VMware | 用户：<用户名>
 
 ---
 
@@ -99,7 +99,7 @@ sudo ssh-keygen -A
 ### 第 4 步：创建用户密钥对
 
 ```bash
-ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N "" -C "kirito@kirito-VMware"
+ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N "" -C "<用户名>@<用户名>-VMware"
 cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
@@ -128,19 +128,19 @@ sudo systemctl status ssh
 
 | 参数 | 值 |
 |------|------|
-| IP 地址 | `192.168.99.108` |
+| IP 地址 | `<服务器IP>` |
 | 端口 | `22` |
-| 用户名 | `kirito` |
+| 用户名 | `<用户名>` |
 | 认证方式 | 密钥（ed25519）+ 密码 |
 
 ### 方式一：密钥认证（推荐）
 
 ```bash
 # 从外部机器连接（需要先把私钥复制过去）
-ssh -i id_ed25519 kirito@192.168.99.108
+ssh -i id_ed25519 <用户名>@<服务器IP>
 ```
 
-私钥内容：`cat /home/kirito/.ssh/id_ed25519`
+私钥内容：`cat /home/<用户名>/.ssh/id_ed25519`
 
 主机指纹：
 ```
@@ -150,19 +150,19 @@ SHA256:ODDdKNrHqBXMnAg+gHtAQRgD441wTDeIwUEoAvAcaVo
 ### 方式二：密码认证
 
 ```bash
-ssh ***9202@192.168.99.108
+ssh ***9202@<服务器IP>
 ```
 
 ### 方式三：如果 SSH 端口不通（VMware NAT 网络）
 
 检查 VMware 网络模式：
-- **桥接模式**：虚拟机直接连物理网络 → 192.168.99.108 可直连
+- **桥接模式**：虚拟机直接连物理网络 → <服务器IP> 可直连
 - **NAT 模式**：需要配置端口转发
 
 ```bash
 # 检查当前 IP
 ip addr show ens33 | grep "inet "
-# inet 192.168.99.108/24 ← 桥接模式
+# inet <服务器IP>/24 ← 桥接模式
 ```
 
 ---
