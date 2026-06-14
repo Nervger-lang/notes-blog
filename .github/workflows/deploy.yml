@@ -27,8 +27,14 @@ jobs:
       - name: Install MkDocs
         run: pip install mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin
 
+      - name: Generate posts.json
+        run: bash generate-posts-json.sh
+
       - name: Build MkDocs
         run: mkdocs build
+
+      - name: Copy posts.json to site
+        run: cp docs/posts.json site/posts.json
 
       - uses: actions/setup-node@v4
         with:

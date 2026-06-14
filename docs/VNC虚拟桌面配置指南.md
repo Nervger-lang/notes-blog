@@ -1,3 +1,7 @@
+---
+date: 2026-06-14
+---
+
 # VNC 虚拟桌面完整配置指南
 
 > 2026-06-14 | Ubuntu 26.04 + TigerVNC + Xfce4 + Chrome

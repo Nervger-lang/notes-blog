@@ -1,3 +1,7 @@
+---
+date: 2026-06-14
+---
+
 # VMware Ubuntu SSH 搭建实战笔记
 
 > 日期：2026-06-11 | 环境：Ubuntu 26.04 (Resolute Raccoon) @ VMware | 用户：kirito

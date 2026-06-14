@@ -1,3 +1,7 @@
+---
+date: 2026-06-14
+---
+
 # CDP 工作原理
 
 > Chrome DevTools Protocol — 不看图，直接读代码
