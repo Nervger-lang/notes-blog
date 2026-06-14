@@ -47,7 +47,7 @@ plugins:
 
 nav:
   - 首页: index.md
-  - 📋 最近更新: 最近更新.md
+  - 📋 最近更新: https://github.com/Nervger-lang/notes-blog/commits/main
   - 技术笔记:
     - CDP 工作原理: CDP工作原理.md
     - CDP 伪装实战: CDP伪装实战笔记.md
