@@ -20,7 +20,7 @@ for f in *.md; do
   # 获取日期
   date=$(git log -1 --format="%as" -- "$f" 2>/dev/null)
   [ -z "$date" ] && date="2026-06-14"
-  url="${f%.md}/"
+  url="../${f%.md}/"
   [ "$first" = true ] && first=false || echo ',' >> posts.json
   echo "  {\"title\": \"$title\", \"date\": \"$date\", \"url\": \"$url\"}" >> posts.json
 done
