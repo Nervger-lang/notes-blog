@@ -5,25 +5,19 @@
 
 ---
 
-## 一、最终方案（直接用）
+## 一、最终方案（就两步，中间走内存）
 
-### 脚本位置
 ```
-/home/kirito/.hermes/scripts/tts_amrwb.py
-```
-
-### 用法
-```bash
-python3 /home/kirito/.hermes/scripts/tts_amrwb.py "你想说的话" /tmp/voice.amr
-# 输出：✅ /tmp/voice.amr: 18065B (17.6KB), 6.1s
+Edge TTS → /dev/shm (内存) → ffmpeg → AMR-WB
 ```
 
-### 技术栈
 | 环节 | 工具 | 说明 |
 |------|------|------|
 | 文字→语音 | Edge TTS | `zh-CN-XiaoyiNeural`（可爱女声），免费，国内直连 |
-| 音频编码 | ffmpeg + libvo_amrwbenc | MP3 → AMR-WB（16kHz, 23.85kbps） |
+| 音频编码 | ffmpeg + libvo_amrwbenc | 内存盘 `/dev/shm` 过渡，无磁盘 I/O |
 | 发送到企微 | MEDIA: 语法 | 在 Hermes 响应中包含 `MEDIA:/tmp/voice.amr` |
+
+> 下面三个阶段是**踩坑记录**——从 AMR-NB 无声到 SILK V3 时长归零，最终才找到 AMR-WB。实际每次执行只跑上面两步。
 
 ### 完整流程
 ```
