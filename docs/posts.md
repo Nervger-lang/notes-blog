@@ -13,7 +13,7 @@ let currentSort = 'date';
 
 async function loadPosts() {
   try {
-    const res = await fetch('/notes-blog/posts.json');
+    const res = await fetch('/notes-blog/posts.json?t=' + Date.now());
     ALL_POSTS = await res.json();
     sortPosts(currentSort);
   } catch(e) {
