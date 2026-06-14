@@ -48,6 +48,7 @@ nav:
     - CDP 工作原理: CDP工作原理.md
     - CDP 伪装实战: CDP伪装实战笔记.md
     - VNC 虚拟桌面配置: VNC虚拟桌面配置指南.md
+    - Linux 桌面自动化 AT-SPI 验证: Linux桌面自动化方案调研-AT-SPI实战验证.md
     - Dify Docker 部署: Dify-Docker部署实战笔记.md
     - VMware Ubuntu SSH: VMware-Ubuntu-SSH搭建实战笔记.md
     - 企微语音回复: 企微语音回复-完整解决记录.md
