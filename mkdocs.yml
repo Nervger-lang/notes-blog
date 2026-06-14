@@ -41,6 +41,9 @@ markdown_extensions:
 
 plugins:
   - search
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: date
 
 nav:
   - 首页: index.md
