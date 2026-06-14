@@ -31,7 +31,12 @@ jobs:
         run: bash generate-posts-json.sh
 
       - name: Build MkDocs
-        run: mkdocs build
+        run: |
+          rm -rf site
+          mkdocs build
+          # 验证 posts 页面有排序按钮
+          grep -q 'posts-container' site/posts/index.html || (echo "ERROR: posts-container missing" && exit 1)
+          echo "✅ posts page verified"
 
       - name: Copy posts.json to site
         run: cp docs/posts.json site/posts.json
