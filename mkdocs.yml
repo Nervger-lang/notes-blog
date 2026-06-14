@@ -46,6 +46,7 @@ nav:
   - 首页: index.md
   - 技术笔记:
     - CDP 工作原理: CDP工作原理.md
+    - CDP 伪装实战: CDP伪装实战笔记.md
     - VNC 虚拟桌面配置: VNC虚拟桌面配置指南.md
     - Dify Docker 部署: Dify-Docker部署实战笔记.md
     - VMware Ubuntu SSH: VMware-Ubuntu-SSH搭建实战笔记.md
