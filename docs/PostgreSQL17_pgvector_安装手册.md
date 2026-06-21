@@ -35,13 +35,14 @@ docker run -d \
 ### 宿主机连接
 
 ```bash
-# psql 命令行
+# 设 .pgpass（一次，免密码）
+echo "localhost:5433:kirito:kirito:<密码>" > ~/.pgpass
+chmod 0600 ~/.pgpass
+
+# 然后直接连，无需 -W
 psql -h localhost -p 5433 -U kirito -d kirito
 
-# 一行命令
-psql 'postgresql://kirito:<密码>@localhost:5433/kirito'
-
-# 先设环境变量免输密码
+# 或环境变量方式
 export PGPASSWORD='<密码>'
 psql -h localhost -p 5433 -U kirito -d kirito
 ```
@@ -58,6 +59,13 @@ conn = psycopg2.connect(
     password="<密码>",
     dbname="kirito"
 )
+```
+
+### 远程连接（从另一台机器）
+
+```bash
+# 宿主机 IP: 192.168.99.108
+psql -h 192.168.99.108 -p 5433 -U kirito -d kirito
 ```
 
 ### Docker 内部连接（其他容器）
@@ -214,7 +222,7 @@ docker run --rm -v pgdata-hermes:/data -v $(pwd):/backup alpine \
 ### 数据库管理
 
 ```sql
--- 查看所有数据库（需要超级用户）
+-- 查看所有数据库（需超级用户）
 \l
 -- 或
 SELECT datname FROM pg_database;
@@ -333,28 +341,101 @@ gunzip < backup.sql.gz | psql -h localhost -p 5433 -U kirito -d kirito
 
 ### 🟢 坑8：连接被拒 / peer authentication
 - 宿主机 `psql -h localhost` 和容器内 `psql` 走不同认证方式
-- 走 TCP 用 md5/密码认证（正常），走 Unix socket 用 peer 认证（报错）
+- 走 TCP 用 scram-sha-256/密码认证（正常），走 Unix socket 用 peer 认证（报错）
 - 宿主机用 `-h localhost` 强制 TCP
 
+### 🔴 坑9：pgvector 镜像 TCP 强制密码认证（2026-06-22 实测）
+- **现象**：宿主机 `psql -h localhost` 报 `FATAL: password authentication failed`，但 `docker exec` 进去却正常
+- **根因**：pgvector 镜像的 `pg_hba.conf` 最后一行 `host all all all scram-sha-256`，**对所有外部 TCP 连接强制密码认证**。容器内走 Unix socket 是 `local all all trust` 所以免密
+- **解法**：确保密码正确 + 设 `.pgpass` 免输入（见坑11）
+
+### 🔴 坑10：没有默认 postgres 超级用户（2026-06-22 实测）
+- **现象**：`docker exec psql -U postgres` → `role "postgres" does not exist`
+- **根因**：容器创建时指定了 `POSTGRES_USER=kirito`，那就**不会创建默认的 postgres 用户**。kirito 就是唯一超级用户
+- **锚点**：这个容器里 `kirito` = 超级用户 = 你唯一的 admin 账号
+
+### 🟢 坑11：免密码连接（.pgpass）（2026-06-22 实测）
+```bash
+# 格式：host:port:database:user:password
+echo "localhost:5433:kirito:kirito:你的密码" > ~/.pgpass
+chmod 0600 ~/.pgpass
+
+# 之后直接连，无需 -W 无需输密码
+psql -h localhost -p 5433 -U kirito -d kirito
+```
+> ⚠️ `.pgpass` 权限必须是 600，否则 psql 会忽略它（安全机制）
+
+### 🟢 坑12：宿主机没装 psql 客户端
+```bash
+# Ubuntu/Debian
+sudo apt install -y postgresql-client
+
+# 验证
+which psql
+```
+
 ---
 
-## 七、快速恢复检查清单
+## 七、健康检查（2026-06-22 验证全部通过 ✅）
 
-假设服务器重装了，按顺序来：
+```sql
+-- 1. 版本
+SELECT version();
+-- → PostgreSQL 17.10
 
-```
-1. docker pull pgvector/pgvector:pg17          # 拉镜像
-2. docker volume ls | grep pgdata-hermes       # 确认卷在不在
-3. docker run -d --name postgres-hermes ...    # 用上面安装命令重建
-4. psql -h localhost -p 5433 -U kirito -d kirito  # 测试连接
-5. \l   # 看数据库列表
-6. \dt  # 看表列表
-7. SELECT extversion FROM pg_extension WHERE extname='vector';  # 确认 pgvector
+-- 2. pgvector
+SELECT extversion FROM pg_extension WHERE extname='vector';
+-- → 0.8.3
+
+-- 3. 向量操作
+CREATE TABLE _test (id serial, emb vector(3));
+INSERT INTO _test (emb) VALUES ('[1,2,3]'), ('[10,20,30]');
+SELECT id, emb <-> '[1,2,3]' AS dist FROM _test ORDER BY dist;
+-- → 0, 33.67
+DROP TABLE _test;
+
+-- 4. 数据库大小
+SELECT pg_size_pretty(pg_database_size('kirito'));
+-- → 7734 kB
 ```
 
 ---
 
-## 八、PG 17 新特性（相对于 PG 15）
+## 八、快速恢复检查清单
+
+```bash
+# 1. 拉镜像
+docker pull pgvector/pgvector:pg17
+
+# 2. 确认数据卷
+docker volume ls | grep pgdata-hermes
+
+# 3. 重建容器（保留数据卷）
+docker run -d --name postgres-hermes \
+  -p 5433:5432 \
+  -e POSTGRES_USER=kirito \
+  -e POSTGRES_PASSWORD=*** \
+  -e POSTGRES_DB=kirito \
+  -v pgdata-hermes:/var/lib/postgresql/data \
+  --restart=unless-stopped \
+  pgvector/pgvector:pg17
+
+# 4. 测试连接
+psql -h localhost -p 5433 -U kirito -d kirito
+
+# 5. 验证
+\l              # 数据库列表
+\dt             # 表列表
+SELECT extversion FROM pg_extension WHERE extname='vector';
+
+# 6. 设免密码
+echo "localhost:5433:kirito:kirito:你的密码" > ~/.pgpass
+chmod 0600 ~/.pgpass
+```
+
+---
+
+## 九、PG 17 新特性（相对于 PG 15）
 
 | 特性 | 说明 |
 |------|------|
@@ -367,4 +448,4 @@ gunzip < backup.sql.gz | psql -h localhost -p 5433 -U kirito -d kirito
 
 ---
 
-*Hermes 整理 · 2026-06-22*
+*Hermes 整理 · 2026-06-22 · 最后验证：全部通过 ✅*
