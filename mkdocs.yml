@@ -58,7 +58,9 @@ nav:
     - VMware Ubuntu SSH: VMware-Ubuntu-SSH搭建实战笔记.md
     - 企微语音回复: 企微语音回复-完整解决记录.md
     - 企微语音 SILK→AMR: 企微语音回复-SILK到AMR-WB解决记录.md
+    - PostgreSQL 17 + pgvector 实战: PostgreSQL17_pgvector_安装手册.md
   - 开发:
+    - Java 转 AI 方向细分: Java转AI应用开发-方向细分调研.md
     - Java 转 AI 应用开发: Java转AI应用开发调研报告.md
   - 市场分析:
     - 主线稀缺性方法论: 主线稀缺性市场分析方法论.md
